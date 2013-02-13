@@ -258,16 +258,11 @@ public abstract class HarvesterVerb {
             builderMap.put(t, builder);
         }
         doc = builder.parse(data);
-        
-        StringTokenizer tokenizer = new StringTokenizer(
-                getSingleString("/*/@xsi:schemaLocation"), " ");
-        StringBuffer sb = new StringBuffer();
-        while (tokenizer.hasMoreTokens()) {
-            if (sb.length() > 0)
-                sb.append(" ");
-            sb.append(tokenizer.nextToken());
-        }
-        this.schemaLocation = sb.toString();
+
+        // The URIs in xsi:schemaLocation are separated by (any kind
+        // of) white space. Normalize it to a single space.
+        String schemaLoc = getSingleString("/*/@xsi:schemaLocation");
+        this.schemaLocation = schemaLoc.trim().replaceAll("\\s+", " ");
     }
     
     /**
